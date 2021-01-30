@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="SW ProApp Native Android Smoke Tests" verbose="0"
+	configfailurepolicy="continue" parallel="false" thread-count="1">
+
+	<parameter name="driver.name" value="android"/>
+	<parameter name="executionMode" value="local"/>
+	<parameter name="language" value="english"/>
+	<parameter name="configFile"
+		value="config/native/android.local.application.properties"/>
+	<parameter name="targetUrl"
+		value="https://qav9-www.sherwin-williams.com/painting-contractors"/>
+	<parameter name="logLevel" value="info"/>
+	<test enabled="true" name="PROAPP Android Smoke Tests">
+		<groups>
+			<run>
+				<include name="mobile_smoke"/>
+			</run>
+		</groups>
+		<classes>
+			<class name="com.sw.app.proapp.MobileSmokeTest"/>
+		</classes>
+	</test>
+	<test enabled="true" name="PROAPP Bids Android Phase 1 Tests">
+		<groups>
+			<run>
+				<include name="mobile_regression"/>
+				<include name="android"/>
+				<exclude name="ios"/>
+				<exclude name="broken"/>
+			</run>
+		</groups>
+		<classes>
+			<class name="com.sw.app.proapp.bids.BidNamePageTest" />
+			<class name="com.sw.app.proapp.bids.BidNotesPageTest" />
+			<class name="com.sw.app.proapp.bids.BidsPageTest" />
+			<class name="com.sw.app.proapp.bids.BidSummaryPageTest" />
+			<class name="com.sw.app.proapp.bids.NewAreaNamePageTest" />
+			<class name="com.sw.app.proapp.bids.NewAreaNotesPageTest" />
+			<class name="com.sw.app.proapp.bids.NewAreaPricePageTest" />
+			<class name="com.sw.app.proapp.bids.NewAreaTasksPageTest" />
+			<class name="com.sw.app.proapp.bids.NewAreaTypePageTest" />
+			<class name="com.sw.app.proapp.bids.ProjectBidsHomePageTest" />
+			<class name="com.sw.app.proapp.bids.AppNavigationTest" />
+			<class name="com.sw.app.proapp.bids.NewAreaProductsSearchPageTest" />
+		</classes>
+	</test>
+	<test enabled="true" name="PROAPP Bids Android Phase 2 Tests">
+		<groups>
+			<run>
+				<include name="mobile_regression"/>
+				<include name="android"/>
+				<exclude name="ios"/>
+				<exclude name="broken"/>
+			</run>
+		</groups>
+		<classes>
+			<class name="com.sw.app.proapp.phase2.bids.BidAreaSubtotalPricingFlatRatePageTest" />
+			<class name="com.sw.app.proapp.phase2.bids.BidNameDiscardPageTest" />
+			<class name="com.sw.app.proapp.phase2.bids.BidNameDuplicatedErrorPageTest" />
+			<class name="com.sw.app.proapp.phase2.bids.BidNameMethodTypeUpdatePageTest" />
+			<class name="com.sw.app.proapp.phase2.bids.BidPDFEmalAttachmentPageTest" />
+			<class name="com.sw.app.proapp.phase2.bids.BidPreviewProductsPageTest" />
+			<class name="com.sw.app.proapp.phase2.bids.BidProjectPricingEditAreaFlatRatePageTest" />
+			<class name="com.sw.app.proapp.phase2.bids.BidProjectPricingEditPencilCalculatedMethodPageTest" />
+			<class name="com.sw.app.proapp.phase2.bids.BidSummaryEditNamePageTest" />
+			<class name="com.sw.app.proapp.phase2.bids.BidSummaryEditPencilsDiscountTaxPageTest" />
+			<class name="com.sw.app.proapp.phase2.bids.BidSummaryEmailAddressPhoneActionablePageTest" />
+			<class name="com.sw.app.proapp.phase2.bids.BidSummaryProductsPageTest" />
+			<class name="com.sw.app.proapp.phase2.bids.BidTaskPriceSummaryPageTest" />
+			<class name="com.sw.app.proapp.phase2.bids.BidTypeSelectionPageTest" />
+			<class name="com.sw.app.proapp.phase2.bids.BidUpdateAddCustomTaskPageTest"/>
+			<class name="com.sw.app.proapp.phase2.bids.BidUpdateLogoPageTest"/>
+			<class name="com.sw.app.proapp.phase2.bids.BidUpdateStatusTest"/>
+		</classes>
+	</test>
+</suite>

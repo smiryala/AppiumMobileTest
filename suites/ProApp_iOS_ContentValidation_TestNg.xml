@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="SW ProApp Native Android Smoke Tests" verbose="0"
+       parallel="false" configfailurepolicy="continue" thread-count="1">
+
+    <parameter name="driver.name" value="ios"/>
+    <parameter name="executionMode" value="remote"/>
+    <parameter name="configFile" value="config/native/ios.application.properties"/>
+    <parameter name="targetUrl" value="https://qav9-www.sherwin-williams.com/painting-contractors"/>
+    <parameter name="logLevel" value="info"/>
+    <parameter name="language" value="english"/>
+
+    <test name="IOS Pro App Tests" enabled="true">
+        <groups>
+            <run>
+                <include name="mobile_content_validation"/>
+                <include name="ios"/>
+                <exclude name="android"/>
+                <exclude name="broken"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.sw.app.proapp.contentValidation.ProAppStoreLocatorContentTest"/>
+            <class name="com.sw.app.proapp.contentValidation.ProAppRegistrationContentTest"/>
+            <class name="com.sw.app.proapp.contentValidation.ProAppLoginPageContentTest"/>
+            <!--            <class name="com.sw.app.proapp.contentValidation.ProAppCreateOrderContentTest"/>-->
+            <!--            <class name="com.sw.app.proapp.contentValidation.ProAppLoginPageContentTest"/>-->
+        </classes>
+    </test>
+</suite>

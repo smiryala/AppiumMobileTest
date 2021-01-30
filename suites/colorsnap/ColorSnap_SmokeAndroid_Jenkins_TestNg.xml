@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="ColorSnap Native Android Smoke Tests" verbose="0"
+  parallel="false" configfailurepolicy="continue" thread-count="1">
+
+    <parameter name="driver.name" value="android"/>
+    <parameter name="executionMode" value="remote"/>
+    <parameter name="language" value="english"/>
+    <parameter name="configFile" value="config/native/colorsnap/android.application.properties"/>
+    <parameter name="logLevel" value="info"/>
+    <test name="ColorSnap Smoke Tests" enabled="true">
+        <groups>
+            <run>
+<!--                <include name="verifyResourcePage"/>-->
+<!--                <include name="verifyPaintPage"/>-->
+                <include name="verifyExplorePage"/>
+<!--                <include name="verifyLoginPage"/>-->
+<!--                <include name="verifyScanColorNumberPage"/>-->
+<!--                <include name="verifyMatchAPhotoPage"/>-->
+<!--                <include name="verifyPaintAPhotoPage"/>-->
+<!--                <include name="verifyInstantPaintPage"/>-->
+<!--                <include name="verifyExplorePagePromoTiles"/>-->
+<!--                <include name="verifyNearbyStore"/>-->
+<!--                <include name="verifyColorCollectionsPage"/>-->
+            </run>
+        </groups>
+        <classes>
+            <class
+              name="com.sw.app.colorsnap.ColorSnapSmokeTest"/>
+        </classes>
+    </test>
+</suite>

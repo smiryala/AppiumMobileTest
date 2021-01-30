@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="ColorSnap Smoke Tests" verbose="0"
+	configfailurepolicy="continue" parallel="false" thread-count="1">
+
+	<parameter name="driver.name" value="android"/>
+	<parameter name="executionMode" value="local"/>
+	<parameter name="language" value="english"/>
+	<parameter name="configFile"
+		value="config/native/colorsnap/android.local.application.properties"/>
+	<parameter name="logLevel" value="info"/>
+	<test name="Android Smoke Tests for colorsnap" enabled="true" >
+		<groups>
+			<run>
+				<include name="verifyResourcePage"/>
+				<include name="verifyPaintPage"/>
+			</run>
+		</groups>
+		<classes>
+			<class
+				name="com.sw.app.colorsnap.ColorSnapSmokeTest"/>
+		</classes>
+	</test>
+</suite>

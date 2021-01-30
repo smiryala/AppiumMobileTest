@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="ColorSnap Native iOS Smoke Tests" verbose="0"
+	parallel="false" configfailurepolicy="continue" thread-count="1">
+
+	<parameter name="driver.name" value="ios"/>
+	<parameter name="executionMode" value="local"/>
+	<parameter name="language" value="english"/>
+	<parameter name="configFile"
+		value="config/native/colorsnap/ios.local.application.properties"/>
+	<parameter name="logLevel" value="info"/>
+	<test name="IOS Smoke SetQA Tests" enabled="true">
+		<groups>
+			<run>
+				<include name="verifyResourcePage"/>
+				<include name="verifyPaintPage"/>
+			</run>
+		</groups>
+		<classes>
+			<class
+				name="com.sw.app.colorsnap.ColorSnapSmokeTest"/>
+		</classes>
+	</test>
+
+</suite>

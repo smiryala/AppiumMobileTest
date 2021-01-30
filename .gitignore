@@ -1,0 +1,9 @@
+lib/
+logs/
+target/
+.idea/
+test-output/
+.settings/
+*.iml
+*.log
+.project

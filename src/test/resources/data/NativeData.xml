@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<NativeData>
+	<loginDetails>
+		<validLogin>
+			<userName>swautomation.testing@sherwin.com</userName>
+			<password>test123</password>
+			<customer>kevincustomer</customer>
+			<credentialSet>kevincredential</credentialSet>
+		</validLogin>
+		<invalidLogin>
+			<userName>swautomation.testing@sherwin.com</userName>
+			<password>test112233</password>
+			<customer>kevincustomer</customer>
+			<credentialSet>kevincredential</credentialSet>
+		</invalidLogin>
+	</loginDetails>
+	<productDetails>
+		<product>
+			<name>kevinproductname</name>
+			<quantity>kevinproductquantity</quantity>
+		</product>
+	</productDetails>
+	<paymentDetails>
+		<payment>
+			<cardName>kevinshah</cardName>
+			<cardNumber>4111111111111111</cardNumber>
+			<cardExpiryMonth>12</cardExpiryMonth>
+			<cardExpiryYear>21</cardExpiryYear>
+			<cardCVV>111</cardCVV>
+		</payment>
+	</paymentDetails>
+</NativeData>

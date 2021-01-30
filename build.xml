@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="xslt" name="SherwinWilliams">
+    <property name="target" value="1.7"/>
+    <property name="source" value="1.7"/>
+    <property name="buildDir" value="${user.home}/Selenium/Ant/${ant.project.name}/Build"/>
+    <property name="resourcesDir" value="${user.home}/Selenium/Ant/_Resources"/>
+    <property file="${basedir}/src/test/resources/config/commonConfig.properties"/>
+    <property name="targetURL" value="${webDriver.targetUrl}"/>
+    <property name="jira.enabled" value="${jira.isJiraEnabled}"/>
+    <property environment="env"/>
+    <property name="buildIdTime" value="${env.BUILD_TIMESTAMP}"/>
+    <property name="old.build.path"
+              value="${env.JENKINS_HOME}/jobs/${env.JOB_NAME}/builds/${env.BUILD_ID}/Automation_Report"/>
+
+    <condition property="url" value="${jenkins_targetUrl}"
+               else="VALUE NOT DEFINED IN JENKINS">
+        <isset property="jenkins_targetUrl"/>
+    </condition>
+    <condition property="conf" value="${configurationFile}"
+               else="VALUE NOT DEFINED IN JENKINS">
+        <isset property="configurationFile"/>
+    </condition>
+    <condition property="testConsoleLogLevel" value="${logLevel}"
+      else="VALUE NOT DEFINED IN JENKINS">
+        <isset property="logLevel"/>
+    </condition>
+    <condition property="testJSessionID" value="${jenkins_jSessionID}"
+      else="VALUE NOT DEFINED IN JENKINS">
+        <isset property="jenkins_jSessionID"/>
+    </condition>
+
+    <condition else="mobile_smoke" property="jenkins_groups"
+      value="${jenkins_groups}">
+        <isset property="jenkins_groups"/>
+    </condition>
+
+    <macrodef name="property-read">
+        <attribute name="environment"/>
+        <sequential>
+            <property name="@{environment}" value="${webDriver.environment}"/>
+        </sequential>
+    </macrodef>
+
+    <!-- class path, used for build -->
+    <path id="classpath">
+        <fileset dir="target" includes="*.jar"/>
+        <pathelement location="${buildDir}"/>
+    </path>
+    <path id="master-classpath">
+        <pathelement location="${basedir}/bin"/>
+        <fileset dir="target">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+    <!-- Config for testng -->
+    <taskdef name="testng" classname="org.testng.TestNGAntTask" classpathref="classpath">
+    </taskdef>
+
+    <!--SET VARIABLES-->
+    <target name="setVar">
+        <!-- get environment -->
+        <property-read environment="environment"/>
+        <!-- get date and time -->
+        <tstamp>
+            <format property="date" pattern="MM-dd-yyyy" locale="en,US"/>
+            <format property="time" pattern="HH.mm.ss" locale="en,US"/>
+        </tstamp>
+
+        <property name="DATE" value="${date}"/>
+        <property name="TIME" value="${time}"/>
+        <property name="ENVIRONMENT" value="${environment}"/>
+        <property name="REPORTPATH"
+                  value="${user.home}${file.separator}Selenium${file.separator}Ant${file.separator}${ant.project.name}${file.separator}Reports${file.separator}${ENVIRONMENT}${file.separator}${DATE}${file.separator}${TIME}"/>
+    </target>
+
+    <!--INIT-->
+    <target name="init" depends="setVar">
+        <delete dir="${buildDir}"/>
+        <mkdir dir="${buildDir}"/>
+        <mkdir dir="${REPORTPATH}/Config"/>
+        <mkdir dir="${basedir}/logs"/>
+        <mkdir dir="${basedir}/target/${buildIdTime}"/>
+        <mkdir dir="${basedir}/target/${buildIdTime}/Config"/>
+        <mkdir dir="${old.build.path}"/>
+    </target>
+
+    <!--BUILD - build all java file to class binary-->
+    <target name="compile" depends="init">
+        <javac encoding="UTF-8"
+               debug="true"
+               srcdir="${basedir}/src"
+               destdir="${buildDir}"
+               classpathref="classpath"
+               includeantruntime="false">
+            <compilerarg value="-Xlint:unchecked"/>
+        </javac>
+        <!--copy resources-->
+        <copy includeemptydirs="false" todir="${buildDir}/config">
+            <fileset dir="${basedir}/src/test/resources/config"/>
+        </copy>
+        <copy includeemptydirs="false" todir="${REPORTPATH}">
+            <fileset dir="${resourcesDir}">
+                <exclude name="*.xsl"/>
+            </fileset>
+        </copy>
+        <copy includeemptydirs="false" todir="${basedir}/target">
+            <fileset dir="${basedir}/lib" erroronmissingdir="false">
+                <exclude name="*.java"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- RUN - execute testng after build, then generate report -->
+    <target depends="compile" name="MobileSmokeAndroid">
+        <!-- config testng -->
+      <!--  <fail if="test.failure" message="Not all tests passed!"/>-->
+        <testng outputdir="${basedir}/target/${buildIdTime}/Config"
+          classpathref="classpath"
+          failureProperty="test.failure" groups="${jenkins_groups}"
+          testnames="PROAPP Android Smoke Tests" useDefaultListeners="true">
+
+            <!-- execute testcase follow testng.xml -->
+            <sysproperty key="org.uncommons.reportng.title"
+              value="${ant.project.name} Test Automation"/>
+            <xmlfileset dir="." includes="suites/ProApp_SmokeAndroid_Jenkins_TestNg.xml"/>
+            <!-- generate report title -->
+            <sysproperty key="org.uncommons.reportng.escape-output" value="false"/>
+            <sysproperty key="screenshotLocation" value="${REPORTPATH}"/>
+            <sysproperty key="jenkinsBuildId" value="${buildIdTime}"/>
+            <sysproperty key="jenkinsBuildNumber" value="${env.BUILD_ID}"/>
+            <sysproperty key="targetUrl" value="${url}"/>
+            <sysproperty key="configFile" value="${conf}"/>
+            <sysproperty key="logLevel" value="${testConsoleLogLevel}"/>
+        </testng>
+    </target>
+    <target depends="compile" name="MobileSmokeAndroid_Failed">
+        <!-- config testng -->
+        <fail if="test.failure" message="Not all tests passed!"/>
+        <testng classpathref="classpath"
+          failureProperty="test.failure"
+          outputdir="${basedir}/target/${buildIdTime}/Config"
+          useDefaultListeners="true">
+
+            <!-- execute testcase follow testng.xml -->
+            <sysproperty key="org.uncommons.reportng.title"
+              value="${ant.project.name} Test Automation"/>
+            <sysproperty key="org.uncommons.reportng.escape-output" value="false"/>
+            <!-- generate report title -->
+            <sysproperty key="screenshotLocation" value="${REPORTPATH}"/>
+            <sysproperty key="jenkinsBuildId" value="${buildIdTime}"/>
+            <sysproperty key="jenkinsBuildNumber" value="${env.BUILD_ID}"/>
+            <sysproperty key="targetUrl" value="${url}"/>
+            <sysproperty key="configFile" value="${conf}"/>
+            <sysproperty key="logLevel" value="${testConsoleLogLevel}"/>
+            <xmlfileset dir="."
+              includes="target/${buildIdTime}/Config/testng-failed.xml"/>
+        </testng>
+    </target>
+    <target depends="compile" name="MobileSmokeiOS_Failed">
+        <!-- config testng -->
+        <testng classpathref="classpath"
+          failureProperty="test.failure"
+          groups="${jenkins_groups}" outputdir="${basedir}/target/${buildIdTime}/Config"
+          testnames="PROAPP iOS Smoke Tests" useDefaultListeners="true">
+
+            <!-- execute testcase follow testng.xml -->
+            <sysproperty key="org.uncommons.reportng.title"
+              value="${ant.project.name} Test Automation"/>
+            <sysproperty key="org.uncommons.reportng.escape-output" value="false"/>
+            <!-- generate report title -->
+            <sysproperty key="screenshotLocation" value="${REPORTPATH}"/>
+            <sysproperty key="jenkinsBuildId" value="${buildIdTime}"/>
+            <sysproperty key="jenkinsBuildNumber" value="${env.BUILD_ID}"/>
+            <xmlfileset dir="."
+              includes="target/${buildIdTime}/Config/testng-failed.xml"/>
+            <sysproperty key="targetUrl" value="${url}"/>
+            <sysproperty key="configFile" value="${conf}"/>
+            <sysproperty key="logLevel" value="${testConsoleLogLevel}"/>
+        </testng>
+        <fail if="test.failure" message="Not all tests passed!"/>
+    </target>
+
+    <target depends="compile" name="MobileSmokeiOS">
+        <!-- config testng -->
+        <testng classpathref="classpath"
+          failureProperty="test.failure"
+          groups="${jenkins_groups}" outputdir="${basedir}/target/${buildIdTime}/Config"
+          testnames="PROAPP iOS Smoke Tests" useDefaultListeners="true">
+
+            <!-- execute testcase follow testng.xml -->
+            <sysproperty key="org.uncommons.reportng.title"
+              value="${ant.project.name} Test Automation"/>
+            <sysproperty key="org.uncommons.reportng.escape-output" value="false"/>
+            <!-- generate report title -->
+            <sysproperty key="screenshotLocation" value="${REPORTPATH}"/>
+            <sysproperty key="jenkinsBuildId" value="${buildIdTime}"/>
+            <sysproperty key="jenkinsBuildNumber" value="${env.BUILD_ID}"/>
+            <sysproperty key="targetUrl" value="${url}"/>
+            <sysproperty key="configFile" value="${conf}"/>
+            <sysproperty key="logLevel" value="${testConsoleLogLevel}"/>
+            <xmlfileset dir="." includes="suites/ProApp_SmokeiOS_Jenkins_TestNg.xml"/>
+        </testng>
+        <!--<fail if="test.failure" message="Not all tests passed!"/>-->
+    </target>
+
+
+</project>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+<suite name="Mobile Tests Suite Template" verbose="2" configfailurepolicy="continue">
+
+    <parameter name="configFile" value="config/native/ios.local.application.properties"/>
+
+    <test name="Mobile Tests Test Template">
+        <groups>
+            <run>
+                <include name="Template"/>
+            </run>
+        </groups>
+        <classes/>
+    </test>
+</suite>
